@@ -1,2 +1,3 @@
-# oblogout-blurlock
-Systemd/OpenRC-compatible logout script for Openbox, Fluxbox and others including OutMok icons and blurlock. Originally written for Manjaro-Fluxbox
+# dmenuexit
+A dmenu exit script for tiling window managers.
+Based on oblogout-blurlock and Systemd/OpenRC-compatible.

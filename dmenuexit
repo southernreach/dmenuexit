@@ -22,8 +22,10 @@ function lock {
   if [ -f "$screenshot" ]; then
     mogrify -scale 20% -scale 500% "$screenshot"
     i3lock -i "$screenshot"
-  else
+  elif [ -f "$HOME/.dmenurc" ]; then
     i3lock -ec $DMENU_NB
+  else
+    i3lock -ec 000000
   fi
   if [ -f @$screenshot" ]; then
     rm "$screenshot"

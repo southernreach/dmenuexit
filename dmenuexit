@@ -30,6 +30,57 @@ function lock {
   fi
 }
 
+# define logout
+function logout {
+  if [ $DESKTOP_SESSION = "fluxbox" ];then
+    killall fluxbox
+  elif [ $DESKTOP_SESSION = "openbox" ]; then
+    openbox --exit
+  elif [ $DESKTOP_SESSION = "i3" ]; then
+    i3-msg exit
+  elif [ $DESKTOP_SESSION = "bspwm" ]; then
+    bspc quit 1
+  else
+    pkill -KILL -u $USER
+  fi
+}
+
+# define suspend
+function suspend {
+  if [ $(cat /proc/1/comm) = "systemd" ]; then
+    systemctl suspend
+  else
+    dbus-send --system --dest=org.freedesktop.ConsoleKit --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Suspend boolean:true
+  fi
+}
+
+# define hibernate
+function hibernate {
+  if [ $(cat /proc/1/comm) = "systemd" ]; then
+    systemctl hibernate
+  else
+    dbus-send --system --dest=org.freedesktop.ConsoleKit --type=method_call --print-reply --reply-timeout=2000 /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Hibernate boolean:true
+  fi
+}
+
+# define reboot
+function reboot {
+  if [ $(cat /proc/1/comm) = "systemd" ]; then
+    systemctl reboot
+  else
+    dbus-send --system --dest=org.freedesktop.ConsoleKit --type=method_call --print-reply --reply-timeout=2000 --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart
+  fi
+}
+
+# define shutdown
+function shutdown {
+  if [ $(cat /proc/1/comm) = "systemd" ]; then
+    systemctl poweroff
+  else
+    dbus-send --system --dest=org.freedesktop.ConsoleKit --type=method_call --print-reply --reply-timeout=2000 --dest=org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
+  fi
+}
+
 # options menu
 dmenu_cmd="dmenu $DMENU_OPTIONS"
 options=$(echo -e "lock\nlogout\nswitch\nsuspend\nhibernate\nreboot\nshutdown" | $dmenu_cmd -p run:)

@@ -1,13 +1,34 @@
 #!/usr/bin/env bash
-
 # dmenuexit
 # a dmenu exit script for tiling window managers
+# based on oblogout-blurlock and systemd/openrc-compatible
 
 # source .dmenurc
 if ! [ -f "$HOME/.dmenurc" ]; then
   cp /usr/share/dmenu/dmenurc $HOME/.dmenurc
 fi
 . $HOME/.dmenurc
+
+# define lock
+function lock {
+  screenshot='/tmp/screenshot.png'
+  if [ -f /usr/bin/scrot ]; then
+    scrot "$screenshot"
+  elif [ -f /usr/bin/import ]; then
+    import -window root "$screenshot"
+  else
+    continue
+  fi
+  if [ -f "$screenshot" ]; then
+    mogrify -scale 20% -scale 500% "$screenshot"
+    i3lock -i "$screenshot"
+  else
+    i3lock -ec $DMENU_NB
+  fi
+  if [ -f @$screenshot" ]; then
+    rm "$screenshot"
+  fi
+}
 
 # options menu
 dmenu_cmd="dmenu $DMENU_OPTIONS"
@@ -21,3 +42,5 @@ case "$options" in
   reboot) reboot & ;;
   shutdown) shutdown & ;;
 esac
+
+exit 0

@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# dmenuexit
+# a dmenu exit script for tiling window managers
+
+# source .dmenurc
+if ! [ -f "$HOME/.dmenurc" ]; then
+  cp /usr/share/dmenu/dmenurc $HOME/.dmenurc
+fi
+. $HOME/.dmenurc
+
+# options menu
+dmenu_cmd="dmenu $DMENU_OPTIONS"
+options=$(echo -e "lock\nlogout\nswitch\nsuspend\nhibernate\nreboot\nshutdown" | $dmenu_cmd -p run:)
+case "$options" in
+  lock) lock & ;;
+  logout) logout & ;;
+  switch) dm-tool switch-to-greeter & ;;
+  suspend) suspend & ;;
+  hibernate) hibernate & ;;
+  reboot) reboot & ;;
+  shutdown) shutdown & ;;
+esac

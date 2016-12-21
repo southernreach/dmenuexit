@@ -27,7 +27,7 @@ function lock {
   else
     i3lock -ec 000000
   fi
-  if [ -f @$screenshot" ]; then
+  if [ -f "$screenshot" ]; then
     rm "$screenshot"
   fi
 }
